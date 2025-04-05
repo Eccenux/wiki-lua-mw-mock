@@ -7,7 +7,7 @@ mw.text = require('mw/text')
 mw.ustring = require('mw/ustring')
 mw.html = require('mw/html')
 
-local langMock = require("mw.langMock")
+local langMock = require("mw/langMock")
 function mw.getContentLanguage()
 	return langMock.createLanguageMock("en")
 end

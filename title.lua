@@ -48,19 +48,19 @@ function p.new(text, nsUser)
 	end
 
 	local nsId = nil
-	local titleText = nil
+	local wgTitle = nil
 
 	local prefix, rest = text:match("^([^:]+):(.+)$")
 	-- find namespace id by prefix
 	if rest then
 		nsId = findNamespaceByName(prefix)
 		if nsId then
-			titleText = text
+			wgTitle = text
 		end
 	end
 	-- no namespace in prefix so check parameter
 	if not nsId then
-		titleText = text
+		wgTitle = text
 		if type(nsUser) == "number" then
 			nsId = nsUser
 		else
@@ -73,11 +73,23 @@ function p.new(text, nsUser)
 	end
 	local ns = mw.site.namespaces[nsId]
 
+	local isTalkPage = ns.id % 2 == 1
+	local talkNsId = isTalkPage and ns.id or (ns.id + 1)
+	local talkNs = nil
+	if ns.id < 0 then
+		talkNsId = -1
+		talkNs = mw.site.namespaces[talkNsId]
+	end
+	local talkPageTitle = nil
+	if not isTalkPage and talkNsId > 0 then
+		talkPageTitle = p.new(wgTitle, talkNsId)
+	end
 	local title = {
 		namespace = ns.id,
 		nsText = ns.name,
-		text = titleText,
-		isTalkPage = ns.id % 2 == 1,
+		text = wgTitle,
+		isTalkPage = isTalkPage,
+		talkPageTitle = talkPageTitle,
 		getContent = function(self)
 			return ""
 		end

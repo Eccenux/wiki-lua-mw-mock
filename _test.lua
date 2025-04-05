@@ -7,5 +7,9 @@ end
 
 local mw = require("mw/mw")
 
-local fullTemplateTitle = mw.title.new("Some title", "Template")
-mw.logObject(fullTemplateTitle)
+local titleObject = nil
+titleObject = mw.title.new("Some title", "Template")
+mw.logObject(titleObject)
+
+titleObject = mw.title.new("Some title", "Template talk")
+mw.logObject(titleObject)
