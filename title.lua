@@ -94,6 +94,16 @@ function p.new(text, nsUser)
 			return ""
 		end
 	}
+	function title:fullUrl(query)
+		local base = "https://example.org/wiki/"
+		local encodedTitle = self.nsText .. ":" .. self.text
+		encodedTitle = encodedTitle:gsub(" ", "_")
+		url = base .. encodedTitle
+		if not query or query == "" then
+			return url
+		end
+		return url .. "?" .. query
+	end		
 
 	return title
 end

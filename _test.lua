@@ -10,6 +10,8 @@ local mw = require("mw/mw")
 local titleObject = nil
 titleObject = mw.title.new("Some title", "Template")
 mw.logObject(titleObject)
+mw.logObject(titleObject:fullUrl("action=edit"))
 
 titleObject = mw.title.new("Some title", "Template talk")
 mw.logObject(titleObject)
+mw.logObject(titleObject:fullUrl("action=edit"))
