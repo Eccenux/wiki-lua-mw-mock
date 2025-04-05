@@ -14,6 +14,21 @@ function p.getCurrentTitle()
 	return p.new(currentTitle.text, currentTitle.namespace)
 end
 
+--- Compares two title objects for equality.
+function p.equals(a, b)
+	if type(a) ~= "table" or type(b) ~= "table" then
+		return false
+	end
+	if a.namespace ~= b.namespace then
+		return false
+	end
+	if a.text ~= b.text then
+		return false
+	end
+
+	return true
+end
+
 local function findNamespaceByName(nsText)
 	local nsId = nil
 	for id, ns in pairs(mw.site.namespaces) do
@@ -63,6 +78,9 @@ function p.new(text, nsUser)
 		nsText = ns.name,
 		text = titleText,
 		isTalkPage = ns.id % 2 == 1,
+		getContent = function(self)
+			return ""
+		end
 	}
 
 	return title
