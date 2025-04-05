@@ -50,6 +50,11 @@ end
 
 --- Adds a CSS class (appends to the "class" attribute).
 function HtmlElement:addClass(className)
+	-- nil etc = NOP
+	if type(className) ~= "string" then
+		return self
+	end
+
 	local existing = self.attrs["class"] or ""
 	if existing ~= "" then
 		self.attrs["class"] = existing .. " " .. className
