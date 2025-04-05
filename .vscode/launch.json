@@ -7,8 +7,8 @@
 		{
 			"type": "lua",
 			"request": "launch",
-			"name": "Debug",
-			"program": "${workspaceFolder}/text.lua"
+			"name": "Debug _test.lua",
+			"program": "${workspaceFolder}/_test.lua"
 		}
 	]
 }

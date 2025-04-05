@@ -18,7 +18,7 @@ return {
 		[14] = { id=14,	name="Category" },
 		[15] = { id=15,	name="Category talk" },
 
-		[16] = { id=-2,	name="Media" },
-		[17] = { id=-1,	name="Special" }
+		[-2] = { id=-2,	name="Media" },
+		[-1] = { id=-1,	name="Special" }
 	}
 }
