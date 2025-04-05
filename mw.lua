@@ -3,6 +3,7 @@ mw = {}
 
 mw.site = require('mw/site') 
 mw.title = require('mw/title')
+mw.text = require('mw/text')
 
 local loadedDataModules = {}
 
