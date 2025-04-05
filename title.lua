@@ -1,4 +1,5 @@
--- === mw.title ===
+local mw_text = require("mw/text")
+
 local p = {}
 
 local currentTitle = {
@@ -73,6 +74,23 @@ function p.new(text, nsUser)
 	end
 	local ns = mw.site.namespaces[nsId]
 
+	-- full and parts of title
+	local fullText = wgTitle
+	if ns.id ~= 0 then
+		fullText = ns.name .. ":" .. wgTitle
+	end
+	local isSubpage = string.find(wgTitle, '/') ~= nil
+	local subpageText = nil
+	local baseText = wgTitle
+	local rootText = wgTitle
+	if isSubpage then
+		local parts = mw_text.split(wgTitle, '/')
+		rootText = parts[1]
+		subpageText = parts[#parts]
+		-- cut out subpageText (last part)
+		baseText = wgTitle:match('^(.-)/[^/]*$')
+	end
+
 	local isTalkPage = ns.id % 2 == 1
 	local talkNsId = isTalkPage and ns.id or (ns.id + 1)
 	local talkNs = nil
@@ -84,10 +102,18 @@ function p.new(text, nsUser)
 	if not isTalkPage and talkNsId > 0 then
 		talkPageTitle = p.new(wgTitle, talkNsId)
 	end
+	-- title object
 	local title = {
 		namespace = ns.id,
 		nsText = ns.name,
 		text = wgTitle,
+
+		fullText = fullText,
+		isSubpage = isSubpage,
+		subpageText = subpageText,
+		baseText = baseText,
+		rootText = rootText,
+	
 		isTalkPage = isTalkPage,
 		talkPageTitle = talkPageTitle,
 		getContent = function(self)
@@ -96,7 +122,7 @@ function p.new(text, nsUser)
 	}
 	function title:fullUrl(query)
 		local base = "https://example.org/wiki/"
-		local encodedTitle = self.nsText .. ":" .. self.text
+		local encodedTitle = self.fullText
 		encodedTitle = encodedTitle:gsub(" ", "_")
 		url = base .. encodedTitle
 		if not query or query == "" then

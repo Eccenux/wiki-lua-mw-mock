@@ -15,3 +15,6 @@ mw.logObject(titleObject:fullUrl("action=edit"))
 titleObject = mw.title.new("Some title", "Template talk")
 mw.logObject(titleObject)
 mw.logObject(titleObject:fullUrl("action=edit"))
+
+titleObject = mw.title.new("Zażółć/gęślą/jaźń", "Module")
+mw.logObject(titleObject)
