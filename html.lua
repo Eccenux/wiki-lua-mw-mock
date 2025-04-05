@@ -75,7 +75,7 @@ end
 function HtmlElement:__tostring()
 	local buf = {}
 
-	table.insert(buf, "<" .. self.tag)
+	table.insert(buf, "<" .. self.nodeName)
 
 	for k, v in pairs(self.attrs) do
 		table.insert(buf, " " .. k .. '="' .. escapeHtml(v) .. '"')
@@ -96,7 +96,7 @@ function HtmlElement:__tostring()
 				table.insert(buf, child.value)
 			end
 		end
-		table.insert(buf, "</" .. self.tag .. ">")
+		table.insert(buf, "</" .. self.nodeName .. ">")
 	end
 
 	return table.concat(buf)
@@ -108,7 +108,7 @@ end
 function p.create(tag)
 	assert(type(tag) == "string" and tag ~= "", "Tag must be a non-empty string.")
 	return setmetatable({
-		tag = tag,
+		nodeName = tag,
 		attrs = {},
 		styles = {},
 		children = {}
