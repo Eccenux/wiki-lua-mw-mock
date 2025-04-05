@@ -1254,6 +1254,9 @@ function encode_value(self, value, parents, etc, options, indent, for_key)
    elseif type(value) == 'string' then
       return json_string_literal(value, options)
 
+   elseif type(value) == 'function' then
+      return value
+
    elseif type(value) == 'number' then
       if value ~= value then
          --
