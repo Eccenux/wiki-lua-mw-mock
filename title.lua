@@ -14,9 +14,20 @@ function p.getCurrentTitle()
 	return p.new(currentTitle.text, currentTitle.namespace)
 end
 
+local function findNamespaceByName(nsText)
+	local nsId = nil
+	for id, ns in pairs(mw.site.namespaces) do
+		if ns.name:lower() == nsText:lower() then
+			nsId = id
+			break
+		end
+	end
+	return nsId
+end
+
 -- partially based on:
 -- https://github.com/wikimedia/mediawiki-extensions-Scribunto/blob/246dc44a26eaf6ce30a1219b690611a70969f35d/includes/Engines/LuaCommon/TitleLibrary.php#L83
-function p.new(text, namespace)
+function p.new(text, nsUser)
 	if type(text) ~= "string" or text == "" then
 		return nil
 	end
@@ -25,34 +36,33 @@ function p.new(text, namespace)
 	local titleText = nil
 
 	local prefix, rest = text:match("^([^:]+):(.+)$")
+	-- find namespace id by prefix
 	if rest then
-		-- z prefiksem, sprawdzamy czy to namespace
-		for id, ns in pairs(mw.site.namespaces) do
-			if ns.name:lower() == prefix:lower() then
-				nsId = id
-				titleText = rest
-				break
-			end
+		nsId = findNamespaceByName(prefix)
+		if nsId then
+			titleText = text
 		end
-		if not nsId then
-			-- nieznany namespace
-			return nil
-		end
-	else
-		-- brak prefiksu: użyj namespace z argumentu lub domyślnie 0
-		nsId = (type(namespace) == "number") and namespace or 0
+	end
+	-- no namespace in prefix so check parameter
+	if not nsId then
 		titleText = text
+		if type(nsUser) == "number" then
+			nsId = nsUser
+		else
+			nsId = findNamespaceByName(nsUser)
+		end
 	end
 
-	if not titleText:match("[%w%d]") then
-		return nil
+	if not mw.site.namespaces[nsId] then
+		nsId = 0
 	end
+	local ns = mw.site.namespaces[nsId]
 
 	local title = {
-		namespace = nsId,
-		nsText = mw.site.namespaces[nsId].name,
+		namespace = ns.id,
+		nsText = ns.name,
 		text = titleText,
-		isTalkPage = false,
+		isTalkPage = ns.id % 2 == 1,
 	}
 
 	return title
