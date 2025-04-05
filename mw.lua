@@ -6,6 +6,14 @@ mw.title = require('mw/title')
 mw.text = require('mw/text')
 mw.ustring = require('mw/ustring')
 
+local langMock = require("mw.langMock")
+function mw.getContentLanguage()
+	return langMock.createLanguageMock("en")
+end
+
+--
+-- Logging
+--
 function mw.log(value)
 	if type(value) == "table" then
 		print(mw.text.jsonPrettyEncode(value))
@@ -17,6 +25,9 @@ function mw.logObject(value)
 	print(mw.text.jsonPrettyEncode(value))
 end
 
+--
+-- Load data
+--
 local loadedDataModules = {}
 
 function mw.loadData(moduleName)
@@ -45,4 +56,6 @@ function mw.loadData(moduleName)
 	return result
 end
 
+--
+--
 return mw
