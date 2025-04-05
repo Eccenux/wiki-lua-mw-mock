@@ -4,6 +4,18 @@ mw = {}
 mw.site = require('mw/site') 
 mw.title = require('mw/title')
 mw.text = require('mw/text')
+mw.ustring = require('mw/ustring')
+
+function mw.log(value)
+	if type(value) == "table" then
+		print(mw.text.jsonPrettyEncode(value))
+	else
+		print(tostring(value))
+	end
+end
+function mw.logObject(value)
+	print(mw.text.jsonPrettyEncode(value))
+end
 
 local loadedDataModules = {}
 

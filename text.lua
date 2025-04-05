@@ -10,6 +10,10 @@ function p.jsonEncode(lua_value)
 	local raw_json_text = JSON:encode(lua_value)
 	return raw_json_text
 end
+function p.jsonPrettyEncode(lua_value)
+	local raw_json_text = JSON:encode_pretty(lua_value)
+	return raw_json_text
+end
 
 -- Note! This is not aware of unicode
 -- https://www.mediawiki.org/wiki/Extension:Scribunto/Lua_reference_manual#mw.text.split
