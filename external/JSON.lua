@@ -1343,7 +1343,7 @@ function encode_value(self, value, parents, etc, options, indent, for_key)
          if options.pretty then
 
             local KEYS = { }
-            local max_key_length = 0
+            local max_key_length = 1
             for _, key in ipairs(object_keys) do
                local encoded = encode_value(self, tostring(key), parents, etc, options, indent, true)
                if options.align_keys then
