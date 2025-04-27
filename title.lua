@@ -65,11 +65,14 @@ function p.new(text, nsUser)
 		if type(nsUser) == "number" then
 			nsId = nsUser
 		else
-			nsId = findNamespaceByName(nsUser)
+			if nsUser then
+				nsId = findNamespaceByName(nsUser)
+			end
 		end
 	end
 
 	if not mw.site.namespaces[nsId] then
+		print(string.format("[WARNING][mw.title] Unknown namespace! id:%s, t:%s, ns:%s", nsid, text, nsUser))
 		nsId = 0
 	end
 	local ns = mw.site.namespaces[nsId]
