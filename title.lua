@@ -54,14 +54,14 @@ function p.new(text, nsUser)
 	end
 
 	local nsId = nil
-	local wgTitle = nil
+	local wgTitle = nil -- name without ns prefix
 
 	local prefix, rest = text:match("^([^:]+):(.+)$")
 	-- find namespace id by prefix
 	if rest then
 		nsId = findNamespaceByName(prefix)
 		if nsId then
-			wgTitle = text
+			wgTitle = rest
 		end
 	end
 	-- no namespace in prefix so check parameter
