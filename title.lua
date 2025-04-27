@@ -31,9 +31,14 @@ function p.equals(a, b)
 end
 
 local function findNamespaceByName(nsText)
+	if nsText == nil then
+		return nil
+	end
+
 	local nsId = nil
+	local nsToFind = nsText:lower()
 	for id, ns in pairs(mw.site.namespaces) do
-		if ns.name:lower() == nsText:lower() then
+		if ns.name:lower() == nsToFind or ns.canonicalName:lower() == nsToFind then
 			nsId = id
 			break
 		end
