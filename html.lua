@@ -25,18 +25,30 @@ HtmlElement.__index = HtmlElement
 
 --- Adds an attribute to the element.
 function HtmlElement:attr(name, value)
+	-- nil = NOP
+	if value == nil then
+		return self
+	end
 	self.attrs[name] = tostring(value)
 	return self
 end
 
 --- Adds a CSS property.
 function HtmlElement:css(name, value)
+	-- nil = NOP
+	if value == nil then
+		return self
+	end
 	self.styles[name] = tostring(value)
 	return self
 end
 
 --- Appends raw wikitext content (i.e., innerHTML).
 function HtmlElement:wikitext(content)
+	-- nil = NOP
+	if content == nil then
+		return self
+	end
 	table.insert(self.children, { type = "wikitext", value = tostring(content) })
 	return self
 end
@@ -44,6 +56,7 @@ end
 --- Appends a new HTML tag as a child.
 function HtmlElement:tag(name)
 	local child = p.create(name)
+	child._parent = self
 	table.insert(self.children, child)
 	return child
 end
@@ -72,7 +85,8 @@ end
 
 --- Returns the parent element (useful for chaining after :tag()).
 function HtmlElement:done()
-	return self._parent or self
+	local res = self._parent or self
+	return res
 end
 
 
