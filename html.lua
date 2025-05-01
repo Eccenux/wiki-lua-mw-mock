@@ -44,12 +44,13 @@ function HtmlElement:css(name, value)
 end
 
 --- Appends raw wikitext content (i.e., innerHTML).
-function HtmlElement:wikitext(content)
-	-- nil = NOP
-	if content == nil then
-		return self
+function HtmlElement:wikitext(...)
+	for i = 1, select("#", ...) do
+		local content = select(i, ...)
+		if content ~= nil then
+			table.insert(self.children, { type = "wikitext", value = tostring(content) })
+		end
 	end
-	table.insert(self.children, { type = "wikitext", value = tostring(content) })
 	return self
 end
 
