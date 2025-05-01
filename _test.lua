@@ -36,13 +36,14 @@ builder
 		:addClass('uvw-xyz')
 		:attr("title", 'tip')
 		:attr("data-null", nil)
-		:attr("data-val", 'value')
+		:attr("data-str", 'value')
+		:attr("data-int", 42)
 		:wikitext('Content')
 		:done()
 	:wikitext("]]")
 
 local result = tostring(builder)
-expected = '[[Special:test/1234|Test: <span class="abc def uvw-xyz" title="tip" data-val="value">Content</span>]]'
+expected = '[[Special:test/1234|Test: <span class="abc def uvw-xyz" title="tip" data-str="value" data-int="42">Content</span>]]'
 mw.log(expected)
 mw.log(result)
 assert(result == expected, "Must render HTML properly.")
