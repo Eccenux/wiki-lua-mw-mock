@@ -80,20 +80,26 @@ end
 function HtmlElement:__tostring()
 	local buf = {}
 
-	table.insert(buf, "<" .. self.nodeName)
+	if self.nodeName ~= "-" then
+		table.insert(buf, "<" .. self.nodeName)
 
-	for k, v in pairs(self.attrs) do
-		table.insert(buf, " " .. k .. '="' .. escapeHtml(v) .. '"')
-	end
+		for k, v in pairs(self.attrs) do
+			table.insert(buf, " " .. k .. '="' .. escapeHtml(v) .. '"')
+		end
 
-	if next(self.styles) then
-		table.insert(buf, ' style="' .. escapeHtml(cssToString(self.styles)) .. '"')
+		if next(self.styles) then
+			table.insert(buf, ' style="' .. escapeHtml(cssToString(self.styles)) .. '"')
+		end
 	end
 
 	if #self.children == 0 then
-		table.insert(buf, " />")
+		if self.nodeName ~= "-" then
+			table.insert(buf, " />")
+		end
 	else
-		table.insert(buf, ">")
+		if self.nodeName ~= "-" then
+			table.insert(buf, ">")
+		end
 		for _, child in ipairs(self.children) do
 			if type(child) == "table" and getmetatable(child) == HtmlElement then
 				table.insert(buf, tostring(child))
@@ -101,7 +107,9 @@ function HtmlElement:__tostring()
 				table.insert(buf, child.value)
 			end
 		end
-		table.insert(buf, "</" .. self.nodeName .. ">")
+		if self.nodeName ~= "-" then
+			table.insert(buf, "</" .. self.nodeName .. ">")
+		end
 	end
 
 	return table.concat(buf)
@@ -111,7 +119,10 @@ end
 -- @param tag Tag name (e.g. "div", "span", etc.)
 -- @return A fluent HTML builder object.
 function p.create(tag)
-	assert(type(tag) == "string" and tag ~= "", "Tag must be a non-empty string.")
+	-- assert(type(tag) == "string" and tag ~= "", "Tag must be a non-empty string.")
+	if type(tag) ~= "string" or tag == "" then
+		tag = "-"
+	end
 	return setmetatable({
 		nodeName = tag,
 		attrs = {},
