@@ -19,6 +19,20 @@ local function cssToString(css)
 	return table.concat(parts)
 end
 
+--- For .attrs etc
+local function orderedTableInit(t)
+	t._keys = {}
+	return t
+end
+local function orderedTableAdd(t, key, value)
+	assert(type(key) == "string" and key ~= "", "Key must be a non-empty string.")
+	assert(key ~= "_keys", "Key must not be named: _keys.")
+	if t[key] == nil then
+		table.insert(t._keys, key)
+	end
+	t[key] = value
+end
+
 --- HTML element builder object.
 local HtmlElement = {}
 HtmlElement.__index = HtmlElement
@@ -29,7 +43,8 @@ function HtmlElement:attr(name, value)
 	if value == nil then
 		return self
 	end
-	self.attrs[name] = tostring(value)
+	-- self.attrs[name] = tostring(value)
+	orderedTableAdd(self.attrs, name, tostring(value))
 	return self
 end
 
@@ -70,11 +85,13 @@ function HtmlElement:addClass(className)
 	end
 
 	local existing = self.attrs["class"] or ""
+	local value
 	if existing ~= "" then
-		self.attrs["class"] = existing .. " " .. className
+		value = existing .. " " .. className
 	else
-		self.attrs["class"] = className
+		value = className
 	end
+	orderedTableAdd(self.attrs, "class", value)
 	return self
 end
 
@@ -98,7 +115,8 @@ function HtmlElement:__tostring()
 	if self.nodeName ~= "-" then
 		table.insert(buf, "<" .. self.nodeName)
 
-		for k, v in pairs(self.attrs) do
+		for _, k in ipairs(self.attrs._keys) do
+			local v = self.attrs[k]
 			table.insert(buf, " " .. k .. '="' .. escapeHtml(v) .. '"')
 		end
 
@@ -140,7 +158,7 @@ function p.create(tag)
 	end
 	return setmetatable({
 		nodeName = tag,
-		attrs = {},
+		attrs = orderedTableInit({}),
 		styles = {},
 		children = {}
 	}, HtmlElement)
