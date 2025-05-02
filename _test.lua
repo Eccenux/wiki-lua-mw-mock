@@ -23,6 +23,8 @@ mw.logObject(titleObject:fullUrl("action=edit"))
 titleObject = mw.title.new("Zażółć/gęślą/jaźń", "Module")
 mw.logObject(titleObject)
 
+print ('mw.logObject:END\n')
+
 --
 -- mw.html
 local builder = mw.html.create()
@@ -65,3 +67,21 @@ expected = '<span class="css-props" style="width:123;display:block;opacity:0.5">
 mw.log(expected)
 mw.log(result)
 assert(result == expected, "Must render style props correctly.")
+
+print ('mw.html:END\n')
+
+--
+-- mw.text.nowiki
+expected = "&#91;&#91;123&#93;&#93;"
+result = mw.text.nowiki('[[123]]')
+mw.log(expected)
+mw.log(result)
+assert(result == expected, "Must escape links.")
+
+expected = "&#42; 123\n&#35; abc"
+result = mw.text.nowiki('* 123\n# abc')
+mw.log(expected)
+mw.log(result)
+assert(result == expected, "Must escape lists.")
+
+print ('mw.text.nowiki:END\n')
