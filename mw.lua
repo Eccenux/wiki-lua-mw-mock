@@ -25,6 +25,9 @@ end
 function mw.logObject(value)
 	print(mw.text.jsonPrettyEncode(value))
 end
+function mw.addWarning(value)
+	print("[WARN] "..tostring(value))
+end
 
 --
 -- Load data
