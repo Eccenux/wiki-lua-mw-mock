@@ -6,7 +6,8 @@ function require(moduleName)
 end
 
 local mw = require("mw/mw")
-local expected = ''
+local expected
+local result
 
 --
 -- mw.logObject
@@ -43,8 +44,24 @@ builder
 		:done()
 	:wikitext("]]")
 
-local result = tostring(builder)
+result = tostring(builder)
 expected = '[[Special:test/1234|Test: <span class="abc uvw-xyz def" title="tip" data-str="value" data-int="42">Content</span>]]'
 mw.log(expected)
 mw.log(result)
 assert(result == expected, "Must render HTML properly.")
+
+builder = mw.html.create()
+builder
+	:tag("span")
+		:addClass('css-props')
+		:css("width", 123)
+		:css("display", 'none')
+		:css("opacity", 0.5)
+		:css("display", 'block')
+		:wikitext('Content')
+
+result = tostring(builder)
+expected = '<span class="css-props" style="width:123;display:block;opacity:0.5">Content</span>'
+mw.log(expected)
+mw.log(result)
+assert(result == expected, "Must render style props correctly.")

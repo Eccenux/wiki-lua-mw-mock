@@ -13,10 +13,11 @@ end
 --- Converts a style table to a CSS string.
 local function cssToString(css)
 	local parts = {}
-	for k, v in pairs(css) do
-		table.insert(parts, k .. ":" .. v .. ";")
+	for _, k in ipairs(css._keys) do
+		local v = css[k]
+		table.insert(parts, k .. ":" .. v)
 	end
-	return table.concat(parts)
+	return table.concat(parts, ";")
 end
 
 --- For .attrs etc
@@ -54,7 +55,8 @@ function HtmlElement:css(name, value)
 	if value == nil then
 		return self
 	end
-	self.styles[name] = tostring(value)
+	-- self.styles[name] = tostring(value)
+	orderedTableAdd(self.styles, name, tostring(value))
 	return self
 end
 
@@ -120,7 +122,7 @@ function HtmlElement:__tostring()
 			table.insert(buf, " " .. k .. '="' .. escapeHtml(v) .. '"')
 		end
 
-		if next(self.styles) then
+		if next(self.styles._keys) then
 			table.insert(buf, ' style="' .. escapeHtml(cssToString(self.styles)) .. '"')
 		end
 	end
@@ -159,7 +161,7 @@ function p.create(tag)
 	return setmetatable({
 		nodeName = tag,
 		attrs = orderedTableInit({}),
-		styles = {},
+		styles = orderedTableInit({}),
 		children = {}
 	}, HtmlElement)
 end
