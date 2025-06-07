@@ -64,6 +64,36 @@ function mw.loadData(moduleName)
 	return result
 end
 
+local loadedJsonDataModules = {}
+
+--- Loads and caches a JSON data module.
+-- @param moduleName The full name of the module (e.g., "Module:Data/Foo.json")
+-- @return Parsed JSON table
+function mw.loadJsonData(moduleName)
+	if loadedJsonDataModules[moduleName] then
+		return loadedJsonDataModules[moduleName]
+	end
+
+	-- Strip the Module prefix and construct filename
+	local path = moduleName:gsub("Modu[^:]+:", "")
+	local file, err = io.open(path, "r")
+	if not file then
+		error("mw.loadJsonData: cannot open file '" .. path .. "': " .. err)
+	end
+
+	local contents = file:read("*a")
+	file:close()
+
+	local ok, result = pcall(mw.text.jsonDecode, contents)
+	if not ok then
+		error("mw.loadJsonData: JSON decode failed: " .. result)
+	end
+
+	-- Cache result
+	loadedJsonDataModules[moduleName] = result
+	return result
+end
+
 --
 --
 return mw
