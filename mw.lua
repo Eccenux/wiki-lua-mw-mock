@@ -11,6 +11,10 @@ local langMock = require("mw/langMock")
 function mw.getContentLanguage()
 	return langMock.createLanguageMock("en")
 end
+mw.language = {}
+function mw.language.getContentLanguage()
+	return langMock.createLanguageMock("en")
+end
 
 --
 -- Logging
