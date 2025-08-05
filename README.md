@@ -21,6 +21,15 @@ Minimal implementation of the `mw` object for testing and debugging Wikipedia Lu
 <a id="-quick-start" name="-quick-start"></a>
 ## 🚀 Quick start
 
+First add a module to your repo:
+```bash
+# add to your repo
+git submodule add https://github.com/Eccenux/wiki-lua-mw-mock.git mw
+# commit the change
+git commit -am "Add 'mw' submodule"
+```
+There are many other ways. Like e.g.: download zip of this repo an unzip to "mw" subdirectory, download once and create a symlink (unix) or junction (windows).
+
 Quick example:
 ```lua
 -- include this library
@@ -157,3 +166,4 @@ mw.logObject(data)
 - Add more realistic implementations (e.g. unicode support in `mw.ustring`).
 - Other mocks/implementations?
 - Optional strict mode to catch unexpected fields.
+
