@@ -6,6 +6,13 @@ function mw.getContentLanguage()
 end
 ]]
 
+--[[
+	Creates a simplified version of the language object/class.
+
+	Not feasible and probably not needed to have a full impl as specified on Mediawiki:
+	https://www.mediawiki.org/wiki/Extension:Scribunto/Lua_reference_manual#Language_library
+	AFAIK MW can share impl with PHP functions that already exists. 
+]]
 local function createLanguageMock(langCode)
 	local lang = {}
 
@@ -33,12 +40,73 @@ local function createLanguageMock(langCode)
 		return str:sub(1, 1):upper() .. str:sub(2)
 	end
 
+	-- Formats number using only English-style grouping and decimal
+	function lang:formatNum(n, options)
+		local str = tostring(n)
+		local noCommafy = options and options.noCommafy
+		if noCommafy then
+			return str
+		end
+
+		local intPart, fracPart = str:match("^(%-?%d+)(%.%d+)?$")
+		intPart = intPart:reverse():gsub("(%d%d%d)", "%1,"):reverse():gsub("^,", "")
+		if fracPart then
+			return intPart .. fracPart
+		else
+			return intPart
+		end
+	end
+
+	-- Formats date using os.date. Supports basic format string
+	function lang:formatDate(formatStr, timestamp, localTime)
+		local time = timestamp and tonumber(timestamp) or os.time()
+		local useUTC = not localTime
+
+		if useUTC then
+			return os.date("!" .. formatStr, time)
+		else
+			return os.date(formatStr, time)
+		end
+	end
+
+	-- Formats duration into human-readable string (English only)
+	function lang:formatDuration(seconds, chosenIntervals)
+		local intervals = {
+			millennia = 60 * 60 * 24 * 365.25 * 1000,
+			centuries = 60 * 60 * 24 * 365.25 * 100,
+			decades = 60 * 60 * 24 * 365.25 * 10,
+			years = 60 * 60 * 24 * 365.25,
+			weeks = 60 * 60 * 24 * 7,
+			days = 60 * 60 * 24,
+			hours = 60 * 60,
+			minutes = 60,
+			seconds = 1
+		}
+
+		local units = chosenIntervals or { "hours", "minutes", "seconds" }
+		local result = {}
+
+		for _, unit in ipairs(units) do
+			local value = math.floor(seconds / intervals[unit])
+			if value > 0 then
+				table.insert(result, value .. " " .. unit)
+				seconds = seconds - value * intervals[unit]
+			end
+		end
+
+		if #result == 0 then
+			return "0 seconds"
+		elseif #result == 1 then
+			return result[1]
+		else
+			local last = table.remove(result)
+			return table.concat(result, ", ") .. " and " .. last
+		end
+	end
+
 	-- ["caseFold"] = function#1,
 	-- ["convertGrammar"] = function#2,
 	-- ["convertPlural"] = function#3,
-	-- ["formatDate"] = function#4,
-	-- ["formatDuration"] = function#5,
-	-- ["formatNum"] = function#6,
 	-- ["gender"] = function#7,
 	-- ["getArrow"] = function#8,
 	-- ["getCode"] = function#9,
