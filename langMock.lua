@@ -48,13 +48,23 @@ local function createLanguageMock(langCode)
 			return str
 		end
 
-		local intPart, fracPart = str:match("^(%-?%d+)(%.%d+)?$")
-		intPart = intPart:reverse():gsub("(%d%d%d)", "%1,"):reverse():gsub("^,", "")
-		if fracPart then
-			return intPart .. fracPart
-		else
-			return intPart
+		local fracPos = string.find(str, ".", 1, true)
+		local intPart = str
+		local fracPart = ""
+		if fracPos then
+			intPart = string.sub(str, 1, fracPos - 1)
+			fracPart = string.sub(str, fracPos + 1)
 		end
+		
+		local formatted = intPart
+		local numReplacements = 1
+		while numReplacements > 0 do	
+			formatted, numReplacements = string.gsub(formatted, "^(-?%d+)(%d%d%d)", '%1,%2')
+		end
+		if fracPos then
+			formatted = formatted .. '.' .. fracPart
+		end
+		return formatted
 	end
 
 	-- Formats date using os.date. Supports basic format string
