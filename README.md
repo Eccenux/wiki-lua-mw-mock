@@ -3,8 +3,8 @@
 - [🚀 Quick start](#-quick-start)
 - [✨ Features](#-features)
 - [🖥️ Setup Instructions](#-setup-instructions)
-	- [1. Install Lua](#1-install-lua)
-	- [2. Install VS Code and Lua Debug](#2-install-visual-studio-code-and-lua-debug)
+	- [Install Lua](#1-install-lua)
+	- [Install Visual Studio Code and Lua Debug](#2-install-visual-studio-code-and-lua-debug)
 - [🐞 Debugging in VS Code](#-debugging-in-vs-code)
 - [📁 Project Structure Example](#-project-structure-example)
 - [🧪 Simple Example](#-simple-example)
@@ -28,7 +28,7 @@ git submodule add https://github.com/Eccenux/wiki-lua-mw-mock.git mw
 # commit the change
 git commit -am "Add 'mw' submodule"
 ```
-There are many other ways. Like e.g.: download zip of this repo an unzip to "mw" subdirectory, download once and create a symlink (unix) or junction (windows).
+There are many other ways. Like e.g.: download zip of this repo an unzip to "mw" subdirectory, download once and create a symlink (Unix) or junction (Windows).
 
 Quick example:
 ```lua
@@ -163,7 +163,7 @@ mw.logObject(data)
 <a id="-ideas" name="-ideas"></a>
 ## 🛠️ Plans / Ideas
 
-- Add more realistic implementations (e.g. unicode support in `mw.ustring`).
+- Add more realistic implementations (e.g. Unicode support in `mw.ustring`).
 - Other mocks/implementations?
 - Optional strict mode to catch unexpected fields.
 
